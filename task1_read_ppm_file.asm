@@ -1,9 +1,7 @@
 ; ==========================
-; Group member 01: Name_Surname_student-nr
-; Group member 02: Name_Surname_student-nr
-; Group member 03: Name_Surname_student-nr
-; Group member 04: Name_Surname_student-nr
-; Group member 05: Name_Surname_student-nr
+; Group member 01: Tafara_Hwata-22565991
+; Group member 02: Luba_Tshikila-u22644106
+; Group member 03: Tinotenda_Chirozvi-22668323
 ; ==========================
 
 ; extern malloc
