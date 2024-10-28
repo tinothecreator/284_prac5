@@ -1,21 +1,19 @@
 ; ==========================
-; Group member 01: Name_Surname_student-nr
-; Group member 02: Name_Surname_student-nr
-; Group member 03: Name_Surname_student-nr
-; Group member 04: Name_Surname_student-nr
-; Group member 05: Name_Surname_student-nr
+; Group member 01: Tafara_Hwata-22565991
+; Group member 02: Luba_Tshikila-u22644106
+; Group member 03: Tinotenda_Chirozvi-22668323
 ; ==========================
 
 section .data
-    red_factor   dd 0.299    
-    green_factor dd 0.587
     blue_factor  dd 0.114
+    green_factor dd 0.587
     max_value    dd 255.0
     zero_value   dd 0.0
-
+    red_factor   dd 0.299    
+    
 section .bss
-    histogram    resd 256    ; Histogram array
     cumulative   resd 256    ; Cumulative histogram array
+    histogram    resd 256    ; Histogram array
     
 section .text
     global computeCDFValues
@@ -46,33 +44,36 @@ build_histogram:
     mov rbx, rdi            ; Current pixel = current row
     
 process_pixel_first_pass:
-    test rbx, rbx           ; Check if current pixel is null
-    jz next_row_first_pass
+    cmp rbx, 0                ; Check if current pixel is null
+    je next_row_first_pass
     
     ; Compute grayscale value
-    xorps xmm0, xmm0
+    pxor xmm0, xmm0
 
-    movzx eax, byte [rbx]       ; Load red component
+    mov al, byte [rbx]        ; Load red component
+    movzx eax, al
     cvtsi2ss xmm1, eax
     mulss xmm1, [red_factor]
     addss xmm0, xmm1
     
-    movzx eax, byte [rbx + 1]   ; Load green component
+    mov al, byte [rbx + 1]    ; Load green component
+    movzx eax, al
     cvtsi2ss xmm1, eax
     mulss xmm1, [green_factor]
     addss xmm0, xmm1
     
-    movzx eax, byte [rbx + 2]   ; Load blue component
+    mov al, byte [rbx + 2]    ; Load blue component
+    movzx eax, al
     cvtsi2ss xmm1, eax
     mulss xmm1, [blue_factor]
     addss xmm0, xmm1
     
-    cvttss2si eax, xmm0         ; Convert to integer
+    cvttss2si eax, xmm0       ; Convert to integer
 
-    mov byte [rbx + 3], al      ; Store grayscale value in CdfValue
-    inc dword [histogram + rax*4] ; Update histogram
-    inc r13                     ; Increment totalPixels
-    mov rbx, [rbx + 32]         ; Move to next pixel using right pointer
+    mov byte [rbx + 3], al    ; Store grayscale value in CdfValue
+    add dword [histogram + rax*4], 1 ; Update histogram
+    add r13, 1                ; Increment totalPixels
+    mov rbx, [rbx + 32]       ; Move to next pixel using right pointer
     jmp process_pixel_first_pass
     
 next_row_first_pass:
